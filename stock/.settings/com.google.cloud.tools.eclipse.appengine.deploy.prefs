@@ -4,5 +4,5 @@ include.optional.configuration.files=true
 project.bucket=
 project.id=stock-backend-210502
 project.previousVersion.stop=true
-project.promote=false
+project.promote=true
 project.version=

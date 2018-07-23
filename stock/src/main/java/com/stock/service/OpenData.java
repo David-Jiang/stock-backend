@@ -47,7 +47,6 @@ public class OpenData {
 		List<String> stockIdArr = new ArrayList<>();
 		stockIdArr.add(parameter);
 		
-		SslUtil.ignoreSsl();
 		String[] urlPathArr = {"https://stock.wearn.com/netbuy.asp?kind=", "https://stock.wearn.com/cdata.asp?kind=", "https://stock.wearn.com/acredit.asp?kind="};
 		HttpURLConnection conn = null;
 		BufferedReader buffer = null;
@@ -150,7 +149,6 @@ public class OpenData {
 	public void updateStockInfo() throws Exception {
 		List<StockVO> stockInfoList = mongoDBDao.getAllStockInfo();
 		
-		SslUtil.ignoreSsl();
 		String[] urlPathArr = {"https://stock.wearn.com/netbuy.asp?kind=", "https://stock.wearn.com/cdata.asp?kind=", "https://stock.wearn.com/acredit.asp?kind="};
 		HttpURLConnection conn = null;
 		BufferedReader buffer = null;
@@ -165,14 +163,14 @@ public class OpenData {
 					URL url = new URL(urlPath + stockId);
 					conn = (HttpURLConnection) url.openConnection();
 				    conn.connect();
-				    Logger.getLogger(Controller.class.getName()).info("連線成功");
+				    
 				    String line = null;
 				    StringBuffer str = new StringBuffer();
 				    buffer = new BufferedReader(new InputStreamReader(conn.getInputStream(), "MS950"));
 				    while((line = buffer.readLine()) != null) {
 				    	str.append(line);
 				    }
-				    Logger.getLogger(Controller.class.getName()).info(str.length() + "");
+				    
 				    int count = 0;
 				    String[] sourceArr = str.toString().split("<tr class=\"stockalllistbg");
 				    for (String source : sourceArr) {
