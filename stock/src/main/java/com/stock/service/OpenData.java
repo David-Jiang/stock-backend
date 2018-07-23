@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,6 +28,8 @@ public class OpenData {
 	
 	@Autowired
 	MongoDBDao mongoDBDao;
+	
+	private static DecimalFormat format_00 = new DecimalFormat("#.00");
 	
 //	public static void main(final String[] args) throws Exception {
 //		OpenData openData = new OpenData();
@@ -132,7 +135,7 @@ public class OpenData {
 						double endPriceNew = Double.valueOf(historyPriceList.get(i).getEndPrice().replaceAll(",", ""));
 						double endPriceOld = Double.valueOf(historyPriceList.get(i + 1).getEndPrice().replaceAll(",", ""));
 						double endPrice = endPriceNew - endPriceOld;
-						historyPriceList.get(i).setWavePrice(String.valueOf(endPrice));
+						historyPriceList.get(i).setWavePrice(format_00.format(endPrice));
 					} else {
 						historyPriceList.get(i).setWavePrice("0");
 					}
@@ -227,7 +230,7 @@ public class OpenData {
 							double endPriceNew = Double.valueOf(historyPriceList.get(i).getEndPrice().replaceAll(",", ""));
 							double endPriceOld = Double.valueOf(historyPriceList.get(i + 1).getEndPrice().replaceAll(",", ""));
 							double endPrice = endPriceNew - endPriceOld;
-							historyPriceList.get(i).setWavePrice(String.valueOf(endPrice));
+							historyPriceList.get(i).setWavePrice(format_00.format(endPrice));
 						} else {
 							historyPriceList.get(i).setWavePrice("0");
 						}
