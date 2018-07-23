@@ -29,12 +29,12 @@ public class OpenData {
 	@Autowired
 	MongoDBDao mongoDBDao;
 	
-	private static DecimalFormat format_00 = new DecimalFormat("#.00");
+	private static DecimalFormat format_00 = new DecimalFormat("0.00");
 	
-//	public static void main(final String[] args) throws Exception {
-//		OpenData openData = new OpenData();
-//		openData.insertStockInfo("2456");
-//	}
+	public static void main(final String[] args) throws Exception {
+		OpenData openData = new OpenData();
+		openData.insertStockInfo("2375");
+	}
 	
 	public List<StockVO> getStockInfo() throws Exception {
 		List<StockVO> stockInfoList = null;
