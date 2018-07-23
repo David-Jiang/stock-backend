@@ -47,4 +47,12 @@ public class StockVO {
 	public void setFinancingTradeList(List<FinancingVO> financingTradeList) {
 		this.financingTradeList = financingTradeList;
 	}
+	
+	@Override
+	public String toString() {
+		return "StockVO [stockId=" + stockId + ", stockName=" + stockName + ", securitiesTradeList="
+				+ securitiesTradeList + ", historyPriceList=" + historyPriceList + ", financingTradeList="
+				+ financingTradeList + "]";
+	}
+	
 }

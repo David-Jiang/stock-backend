@@ -15,7 +15,7 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
 	@Override
 	public void onApplicationEvent(final ContextRefreshedEvent event) {
 		//ApplicationContext ctx = event.getApplicationContext();
-		log.info("啟動成功" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		log.info("AP啟動成功" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 	}
 
 }

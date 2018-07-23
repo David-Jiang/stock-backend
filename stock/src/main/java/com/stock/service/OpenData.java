@@ -2,22 +2,20 @@ package com.stock.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Component;
 
-import com.stock.config.Application;
+import com.stock.ctrl.Controller;
 import com.stock.dao.MongoDBDao;
-import com.stock.util.DateUtil;
 import com.stock.util.SslUtil;
 import com.stock.vo.FinancingVO;
 import com.stock.vo.HistoryVO;
@@ -51,7 +49,7 @@ public class OpenData {
 		
 		SslUtil.ignoreSsl();
 		String[] urlPathArr = {"https://stock.wearn.com/netbuy.asp?kind=", "https://stock.wearn.com/cdata.asp?kind=", "https://stock.wearn.com/acredit.asp?kind="};
-		HttpsURLConnection conn = null;
+		HttpURLConnection conn = null;
 		BufferedReader buffer = null;
 		
 		List<StockVO> stockInfoList = new ArrayList<>();
@@ -65,7 +63,7 @@ public class OpenData {
 					List<FinancingVO> financingTradeList = new ArrayList<>();
 					
 					URL url = new URL(urlPath + stockId);
-					conn = (HttpsURLConnection) url.openConnection();
+					conn = (HttpURLConnection) url.openConnection();
 				    conn.connect();
 				    
 				    String line = null;
@@ -154,7 +152,7 @@ public class OpenData {
 		
 		SslUtil.ignoreSsl();
 		String[] urlPathArr = {"https://stock.wearn.com/netbuy.asp?kind=", "https://stock.wearn.com/cdata.asp?kind=", "https://stock.wearn.com/acredit.asp?kind="};
-		HttpsURLConnection conn = null;
+		HttpURLConnection conn = null;
 		BufferedReader buffer = null;
 		
 		try {
@@ -163,18 +161,18 @@ public class OpenData {
 				List<SecuritiesVO> securitiesTradeList = stockVO.getSecuritiesTradeList();
 				List<HistoryVO> historyPriceList = stockVO.getHistoryPriceList();
 				List<FinancingVO> financingTradeList = stockVO.getFinancingTradeList();
-				
 				for (String urlPath : urlPathArr) {
 					URL url = new URL(urlPath + stockId);
-					conn = (HttpsURLConnection) url.openConnection();
+					conn = (HttpURLConnection) url.openConnection();
 				    conn.connect();
-				    
+				    Logger.getLogger(Controller.class.getName()).info("連線成功");
 				    String line = null;
 				    StringBuffer str = new StringBuffer();
 				    buffer = new BufferedReader(new InputStreamReader(conn.getInputStream(), "MS950"));
 				    while((line = buffer.readLine()) != null) {
 				    	str.append(line);
 				    }
+				    Logger.getLogger(Controller.class.getName()).info(str.length() + "");
 				    int count = 0;
 				    String[] sourceArr = str.toString().split("<tr class=\"stockalllistbg");
 				    for (String source : sourceArr) {
@@ -242,6 +240,7 @@ public class OpenData {
 				conn.disconnect();
 				Thread.sleep(5000);
 			}
+			
 			mongoDBDao.updateAllStockInfo(stockInfoList);
 		} catch (Exception e) {
 			buffer.close();

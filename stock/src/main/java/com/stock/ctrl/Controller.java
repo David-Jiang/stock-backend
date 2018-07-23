@@ -1,5 +1,7 @@
 package com.stock.ctrl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -65,11 +67,12 @@ public class Controller {
 		return gson.toJson(stockInfoList);
 	}
 	
-	@RequestMapping(value = "/callTask", produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/task", produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String callTask() {
+	public String task() {
 		OpenData openData = context.getBean(OpenData.class);
 		try {
+			log.info("排程啟動成功" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			openData.updateStockInfo();
 		} catch (Exception e) {
 			log.info(this.getClass().getName() + e.getMessage());
