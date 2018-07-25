@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cronentries>
-  <cron>
-    <url>/task</url>
-    <description>stock task</description>
-    <schedule>every day 17:30</schedule>
-    <timezone>Asia/Taipei</timezone>
-    <retry-parameters>
-      <min-backoff-seconds>2.5</min-backoff-seconds>
-      <max-doublings>5</max-doublings>
-    </retry-parameters>
-  </cron>
+	<cron>
+		<url>/task</url>
+		<description>stock task</description>
+		<schedule>every day 17:30</schedule>
+		<timezone>Asia/Taipei</timezone>
+		<retry-parameters>
+			<min-backoff-seconds>2.5</min-backoff-seconds>
+			<max-doublings>5</max-doublings>
+		</retry-parameters>
+	</cron>
+	<cron>
+		<url>/task</url>
+		<description>stock task</description>
+		<schedule>every day 22:00</schedule>
+		<timezone>Asia/Taipei</timezone>
+		<retry-parameters>
+			<min-backoff-seconds>2.5</min-backoff-seconds>
+			<max-doublings>5</max-doublings>
+		</retry-parameters>
+	</cron>
 </cronentries>
