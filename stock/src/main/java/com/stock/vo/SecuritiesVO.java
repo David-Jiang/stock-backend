@@ -1,6 +1,7 @@
 package com.stock.vo;
 
 public class SecuritiesVO {
+	private String stockId;
 	private String transactionDate;
 	private int totalAmount;
 	private int investAmount;
@@ -36,6 +37,12 @@ public class SecuritiesVO {
 	}
 	public void setForeignAmount(int foreignAmount) {
 		this.foreignAmount = foreignAmount;
+	}
+	public String getStockId() {
+		return stockId;
+	}
+	public void setStockId(String stockId) {
+		this.stockId = stockId;
 	}
 	
 	

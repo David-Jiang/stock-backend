@@ -1,6 +1,7 @@
 package com.stock.vo;
 
 public class HistoryVO {
+	private String stockId;
 	private String transactionDate;
 	private String startPrice;
 	private String highPrice;
@@ -50,6 +51,18 @@ public class HistoryVO {
 	}
 	public void setWavePrice(String wavePrice) {
 		this.wavePrice = wavePrice;
+	}
+	public String getStockId() {
+		return stockId;
+	}
+	public void setStockId(String stockId) {
+		this.stockId = stockId;
+	}
+	@Override
+	public String toString() {
+		return "HistoryVO [stockId=" + stockId + ", transactionDate=" + transactionDate + ", startPrice=" + startPrice
+				+ ", highPrice=" + highPrice + ", lowPrice=" + lowPrice + ", endPrice=" + endPrice + ", wavePrice="
+				+ wavePrice + ", transactionAmount=" + transactionAmount + "]";
 	}
 	
 	

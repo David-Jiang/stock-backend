@@ -241,4 +241,20 @@ public class DateUtil {
 		}
 		return new Timestamp(date.getTime());
 	}
+	
+	@SuppressWarnings("static-access")
+	public static String before30day() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Calendar calc = Calendar.getInstance();
+		String twDate = getTwToday(false);
+		try {
+			calc.setTime(sdf.parse(tw2WestDate(twDate)));
+			calc.add(calc.DATE, -30);
+			return west2TwDate(sdf.format(calc.getTime()));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return twDate;
+	}
 }

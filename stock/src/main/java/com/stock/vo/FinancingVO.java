@@ -1,6 +1,7 @@
 package com.stock.vo;
 
 public class FinancingVO {
+	private String stockId;
 	private String transactionDate;
 	private String marginAmount;
 	private String marginBalance;
@@ -36,6 +37,12 @@ public class FinancingVO {
 	}
 	public void setShortBalance(String shortBalance) {
 		this.shortBalance = shortBalance;
+	}
+	public String getStockId() {
+		return stockId;
+	}
+	public void setStockId(String stockId) {
+		this.stockId = stockId;
 	}
 	
 	

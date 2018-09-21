@@ -9,15 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.stock.ctrl.Controller;
 import com.stock.dao.MongoDBDao;
-import com.stock.util.SslUtil;
 import com.stock.vo.FinancingVO;
 import com.stock.vo.HistoryVO;
 import com.stock.vo.SecuritiesVO;
@@ -30,11 +27,6 @@ public class OpenData {
 	MongoDBDao mongoDBDao;
 	
 	private static DecimalFormat format_00 = new DecimalFormat("0.00");
-	
-	public static void main(final String[] args) throws Exception {
-		OpenData openData = new OpenData();
-		openData.insertStockInfo("2375");
-	}
 	
 	public List<StockVO> getStockInfo() throws Exception {
 		List<StockVO> stockInfoList = null;
@@ -99,11 +91,11 @@ public class OpenData {
 				    			tempArr[4] = tempArr[4].split("<span")[0];
 					    	}
 					    	if (urlPath.indexOf("netbuy") > -1) {
-					    		securitiesTradeList.add(changeToSecuritiesVO(tempArr));
+					    		securitiesTradeList.add(changeToSecuritiesVO(tempArr, stockId));
 					    	} else if (urlPath.indexOf("cdata") > -1) {
-					    		historyPriceList.add(changeToHistoryVO(tempArr));
+					    		historyPriceList.add(changeToHistoryVO(tempArr, stockId));
 					    	} else {
-					    		financingTradeList.add(changeToFinancingVO(tempArr));
+					    		financingTradeList.add(changeToFinancingVO(tempArr, stockId));
 					    	}
 				    	} else {
 				    		if (StringUtils.isBlank(stockVO.getStockId())) {
@@ -162,6 +154,7 @@ public class OpenData {
 				List<SecuritiesVO> securitiesTradeList = stockVO.getSecuritiesTradeList();
 				List<HistoryVO> historyPriceList = stockVO.getHistoryPriceList();
 				List<FinancingVO> financingTradeList = stockVO.getFinancingTradeList();
+				
 				for (String urlPath : urlPathArr) {
 					URL url = new URL(urlPath + stockId);
 					conn = (HttpURLConnection) url.openConnection();
@@ -201,15 +194,15 @@ public class OpenData {
 					    	String transactionDate = tempArr[0].trim();
 					    	if (urlPath.indexOf("netbuy") > -1) {
 						    	if (securitiesTradeList.stream().noneMatch(vo -> StringUtils.equals(vo.getTransactionDate(), transactionDate))) {
-						    		securitiesTradeList.add(changeToSecuritiesVO(tempArr));
+						    		securitiesTradeList.add(changeToSecuritiesVO(tempArr, stockId));
 						    	}
 					    	} else if (urlPath.indexOf("cdata") > -1) {
 						    	if (historyPriceList.stream().noneMatch(vo -> StringUtils.equals(vo.getTransactionDate(), transactionDate))) {
-						    		historyPriceList.add(changeToHistoryVO(tempArr));
+						    		historyPriceList.add(changeToHistoryVO(tempArr, stockId));
 						    	}
 					    	} else {
 					    		if (financingTradeList.stream().noneMatch(vo -> StringUtils.equals(vo.getTransactionDate(), transactionDate))) {
-					    			financingTradeList.add(changeToFinancingVO(tempArr));
+					    			financingTradeList.add(changeToFinancingVO(tempArr, stockId));
 						    	}
 					    	}
 				    	}
@@ -250,9 +243,10 @@ public class OpenData {
 		}
 	}
 	
-	private SecuritiesVO changeToSecuritiesVO(String[] source) {
+	private SecuritiesVO changeToSecuritiesVO(String[] source, String stockId) {
 		SecuritiesVO securitiesVO = new SecuritiesVO();
-    	securitiesVO.setTransactionDate(source[0].trim());
+		securitiesVO.setStockId(stockId);
+    	securitiesVO.setTransactionDate(source[0].trim().replaceAll("/", ""));
     	securitiesVO.setInvestAmount(Integer.parseInt(source[1].trim().replaceAll(",", "")));
     	securitiesVO.setNativeAmount(Integer.parseInt(source[2].trim().replaceAll(",", "")));
     	securitiesVO.setForeignAmount(Integer.parseInt(source[3].trim().replaceAll(",", "")));
@@ -260,9 +254,10 @@ public class OpenData {
     	return securitiesVO;
 	}
 	
-	private HistoryVO changeToHistoryVO(String[] source) {
+	private HistoryVO changeToHistoryVO(String[] source, String stockId) {
 		HistoryVO historyVO = new HistoryVO();
-		historyVO.setTransactionDate(source[0].trim());
+		historyVO.setStockId(stockId);
+		historyVO.setTransactionDate(source[0].trim().replaceAll("/", ""));
 		historyVO.setStartPrice(source[1].trim());
 		historyVO.setHighPrice(source[2].trim());
 		historyVO.setLowPrice(source[3].trim());
@@ -271,9 +266,10 @@ public class OpenData {
     	return historyVO;
 	}
 	
-	private FinancingVO changeToFinancingVO(String[] source) {
+	private FinancingVO changeToFinancingVO(String[] source, String stockId) {
 		FinancingVO financingVO = new FinancingVO();
-		financingVO.setTransactionDate(source[0].trim());
+		financingVO.setStockId(stockId);
+		financingVO.setTransactionDate(source[0].trim().replaceAll("/", ""));
 		financingVO.setMarginAmount(source[1].trim());
 		financingVO.setMarginBalance(source[2].trim());
 		financingVO.setShortAmount(source[3].trim());
