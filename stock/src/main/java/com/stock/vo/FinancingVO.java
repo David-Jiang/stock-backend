@@ -1,5 +1,6 @@
 package com.stock.vo;
 
+
 public class FinancingVO {
 	private String stockId;
 	private String transactionDate;
@@ -44,6 +45,4 @@ public class FinancingVO {
 	public void setStockId(String stockId) {
 		this.stockId = stockId;
 	}
-	
-	
 }

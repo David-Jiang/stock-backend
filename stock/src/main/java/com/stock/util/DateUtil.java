@@ -243,13 +243,13 @@ public class DateUtil {
 	}
 	
 	@SuppressWarnings("static-access")
-	public static String before30day() {
+	public static String before10day() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		Calendar calc = Calendar.getInstance();
 		String twDate = getTwToday(false);
 		try {
 			calc.setTime(sdf.parse(tw2WestDate(twDate)));
-			calc.add(calc.DATE, -30);
+			calc.add(calc.DATE, -10);
 			return west2TwDate(sdf.format(calc.getTime()));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

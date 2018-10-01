@@ -142,13 +142,13 @@ public class OpenData {
 	}
 	
 	public void updateStockInfo() throws Exception {
-		List<StockVO> stockInfoList = mongoDBDao.getAllStockInfo();
-		
 		String[] urlPathArr = {"https://stock.wearn.com/netbuy.asp?kind=", "https://stock.wearn.com/cdata.asp?kind=", "https://stock.wearn.com/acredit.asp?kind="};
 		HttpURLConnection conn = null;
 		BufferedReader buffer = null;
-		
 		try {
+			List<StockVO> stockInfoList = mongoDBDao.getLatestStockInfo();
+			String latestDate = stockInfoList.get(0).getHistoryPriceList().get(0).getTransactionDate();
+			
 			for (StockVO stockVO : stockInfoList) {
 				String stockId = stockVO.getStockId();
 				List<SecuritiesVO> securitiesTradeList = stockVO.getSecuritiesTradeList();
@@ -191,32 +191,24 @@ public class OpenData {
 					    		tempArr[2] = tempArr[2].split("<span")[0];
 				    			tempArr[4] = tempArr[4].split("<span")[0];
 					    	}
-					    	String transactionDate = tempArr[0].trim();
+					    	String transactionDate = tempArr[0].trim().replaceAll("/", "");
+					    	if (transactionDate.compareTo(latestDate) <= 0) {
+					    		continue;
+					    	}
 					    	if (urlPath.indexOf("netbuy") > -1) {
-						    	if (securitiesTradeList.stream().noneMatch(vo -> StringUtils.equals(vo.getTransactionDate(), transactionDate))) {
-						    		securitiesTradeList.add(changeToSecuritiesVO(tempArr, stockId));
-						    	}
+					    		securitiesTradeList.add(changeToSecuritiesVO(tempArr, stockId));
 					    	} else if (urlPath.indexOf("cdata") > -1) {
-						    	if (historyPriceList.stream().noneMatch(vo -> StringUtils.equals(vo.getTransactionDate(), transactionDate))) {
-						    		historyPriceList.add(changeToHistoryVO(tempArr, stockId));
-						    	}
+					    		historyPriceList.add(changeToHistoryVO(tempArr, stockId));
 					    	} else {
-					    		if (financingTradeList.stream().noneMatch(vo -> StringUtils.equals(vo.getTransactionDate(), transactionDate))) {
-					    			financingTradeList.add(changeToFinancingVO(tempArr, stockId));
-						    	}
+					    		financingTradeList.add(changeToFinancingVO(tempArr, stockId));
 					    	}
 				    	}
 				    	count++;
 				    }
 				}
 				
-			    Collections.sort(securitiesTradeList, Comparator.comparing(SecuritiesVO::getTransactionDate).reversed());
-			    stockVO.setSecuritiesTradeList(securitiesTradeList);
 			    Collections.sort(historyPriceList, Comparator.comparing(HistoryVO::getTransactionDate).reversed());
 			    stockVO.setHistoryPriceList(historyPriceList);
-			    Collections.sort(financingTradeList, Comparator.comparing(FinancingVO::getTransactionDate).reversed());
-			    stockVO.setFinancingTradeList(financingTradeList);
-			    
 			    for (int i = 0; i < historyPriceList.size(); i++) {
 			    	if (StringUtils.isEmpty(historyPriceList.get(i).getWavePrice())) {
 			    		if ((i + 1) != historyPriceList.size()) {
@@ -229,13 +221,16 @@ public class OpenData {
 						}
 			    	}
 				}
+			    securitiesTradeList.removeIf(vo -> StringUtils.equals(vo.getTransactionDate(), latestDate));
+			    historyPriceList.removeIf(vo -> StringUtils.equals(vo.getTransactionDate(), latestDate));
+			    financingTradeList.removeIf(vo -> StringUtils.equals(vo.getTransactionDate(), latestDate));
 			    
 			    buffer.close();
 				conn.disconnect();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 			}
 			
-			mongoDBDao.updateAllStockInfo(stockInfoList);
+			mongoDBDao.updateStockInfo(stockInfoList);
 		} catch (Exception e) {
 			buffer.close();
 			conn.disconnect();

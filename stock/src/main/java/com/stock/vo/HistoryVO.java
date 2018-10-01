@@ -1,5 +1,6 @@
 package com.stock.vo;
 
+
 public class HistoryVO {
 	private String stockId;
 	private String transactionDate;
@@ -9,6 +10,7 @@ public class HistoryVO {
 	private String endPrice;
 	private String wavePrice;
 	private String transactionAmount;
+	private String latestDate;
 	
 	public String getTransactionDate() {
 		return transactionDate;
@@ -58,12 +60,10 @@ public class HistoryVO {
 	public void setStockId(String stockId) {
 		this.stockId = stockId;
 	}
-	@Override
-	public String toString() {
-		return "HistoryVO [stockId=" + stockId + ", transactionDate=" + transactionDate + ", startPrice=" + startPrice
-				+ ", highPrice=" + highPrice + ", lowPrice=" + lowPrice + ", endPrice=" + endPrice + ", wavePrice="
-				+ wavePrice + ", transactionAmount=" + transactionAmount + "]";
+	public String getLatestDate() {
+		return latestDate;
 	}
-	
-	
+	public void setLatestDate(String latestDate) {
+		this.latestDate = latestDate;
+	}
 }

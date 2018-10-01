@@ -1,9 +1,7 @@
 package com.stock.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.data.annotation.Id;
 
 public class StockVO {
@@ -39,9 +37,6 @@ public class StockVO {
 		this.historyPriceList = historyPriceList;
 	}
 	public List<FinancingVO> getFinancingTradeList() {
-		if (CollectionUtils.isEmpty(financingTradeList)) {
-			financingTradeList = new ArrayList<>();
-		}
 		return financingTradeList;
 	}
 	public void setFinancingTradeList(List<FinancingVO> financingTradeList) {
